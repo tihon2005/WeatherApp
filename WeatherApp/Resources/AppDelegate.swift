@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  WeatherApp
-//
-//  Created by Tikhon Bazar on 20.08.23.
-//
-
 import UIKit
 
 @main
