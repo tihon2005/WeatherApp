@@ -60,7 +60,7 @@ class WeatherView: UIViewController {
     }
     
     private func getWeather() {
-        let urlString = "https://api.open-meteo.com/v1/forecast?latitude=64.1355&longitude=-21.8954&current_weather=true"
+        let urlString = "https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true&timezone=Europe%2FLondon"
         let url = URL(string: urlString)!
         let request = URLRequest(url: url)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -98,7 +98,7 @@ class WeatherView: UIViewController {
     
     private func setUpView() {
         let cityNameLabel = UILabel()
-        cityNameLabel.text = "Reykjavík, IS"
+        cityNameLabel.text = "London, UK"
         cityNameLabel.font = UIFont.systemFont(ofSize: 32, weight: .medium)
         view.addSubview(cityNameLabel)
         cityNameLabel.snp.makeConstraints { make in

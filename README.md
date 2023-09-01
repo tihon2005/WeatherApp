@@ -1,5 +1,6 @@
 <p align="center">
-      <img src="https://i.ibb.co/tbFJ7BH/Simulator-Screenshot-i-Phone-14-Pro-2023-08-31-at-22-19-53.png" width="326">
+      <img src="https://i.ibb.co/VNsnS8M/Simulator-Screenshot-i-Phone-14-Pro-2023-09-01-at-16-34-02.png" width="326">
+      <img src="https://i.ibb.co/LgvfRXj/Simulator-Screenshot-i-Phone-14-Pro-2023-09-01-at-00-39-13.png" width="326">
 </p>
 
 ## Weather App
@@ -12,4 +13,4 @@
 
 ## About
 
-An app that shows temperature, wind speed and wind direction fore Reykjavík city.
+An app that shows temperature, wind speed and wind direction fore London city.
