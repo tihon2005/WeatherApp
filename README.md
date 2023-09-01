@@ -13,4 +13,4 @@
 
 ## About
 
-An app that shows temperature, wind speed and wind direction fore London city.
+An app that shows temperature, wind speed and wind direction for London city.
