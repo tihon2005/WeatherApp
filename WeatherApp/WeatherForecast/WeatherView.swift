@@ -99,6 +99,7 @@ class WeatherView: UIViewController {
     private func setUpView() {
         let cityNameLabel = UILabel()
         cityNameLabel.text = "London, UK"
+        cityNameLabel.textColor = .white
         cityNameLabel.font = UIFont.systemFont(ofSize: 32, weight: .medium)
         view.addSubview(cityNameLabel)
         cityNameLabel.snp.makeConstraints { make in
@@ -119,6 +120,7 @@ class WeatherView: UIViewController {
         
         let temperatureLabel = UILabel()
         temperatureLabel.text = "Temperature: \(temperature)"
+        temperatureLabel.textColor = .white
         temperatureLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
         view.addSubview(temperatureLabel)
         temperatureLabel.snp.makeConstraints { make in
@@ -140,6 +142,7 @@ class WeatherView: UIViewController {
         
         let windSpeedLabel = UILabel()
         windSpeedLabel.text = "Wind Speed: \(windSpeed)"
+        windSpeedLabel.textColor = .white
         windSpeedLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
         view.addSubview(windSpeedLabel)
         windSpeedLabel.snp.makeConstraints { make in
@@ -171,6 +174,7 @@ class WeatherView: UIViewController {
         
         let windDirectionLabel = UILabel()
         windDirectionLabel.text = "Wind Direction: \(windDirection)°"
+        windDirectionLabel.textColor = .white
         windDirectionLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
         view.addSubview(windDirectionLabel)
         windDirectionLabel.snp.makeConstraints { make in
@@ -191,6 +195,7 @@ class WeatherView: UIViewController {
         
         let timeLabel = UILabel()
         timeLabel.text = "Time: \(time)"
+        timeLabel.textColor = .white
         timeLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
         view.addSubview(timeLabel)
         timeLabel.snp.makeConstraints { make in
