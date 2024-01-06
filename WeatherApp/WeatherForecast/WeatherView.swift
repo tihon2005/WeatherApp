@@ -1,15 +1,22 @@
 import UIKit
+import Dropper
 import SnapKit
 
-class WeatherView: UIViewController {
+class WeatherView: UIViewController, DropperDelegate {
     
     //MARK: - Properties
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
     private var backgroundGradient: CAGradientLayer!
+    
+    let dropper = Dropper(width: 100, height: 200)
+    
+    let defaults = UserDefaults.standard
+    
+    let cityNameButton = UIButton(type: .roundedRect)
+    
+    var urlString = "https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true&timezone=Europe%2FLondon"
+    
+    var titleForButton = "London, UK"
     
     //MARK: - Images Strings
     
@@ -34,7 +41,32 @@ class WeatherView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackground()
-        getWeather()
+        checkCity()
+        getWeather(urlString: urlString)
+    }
+    
+    // MARK: - Dropper
+    func DropperSelectedRow(_ path: IndexPath, contents: String) {
+        if contents == "London, UK" {
+            let urlString = "https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true&timezone=Europe%2FLondon"
+            configureBackground()
+            titleForButton = "London, UK"
+            defaults.set(urlString, forKey: "city")
+            getWeather(urlString: urlString)
+        } else if contents == "Berlin, DE" {
+            let urlString = "https://api.open-meteo.com/v1/forecast?latitude=52.5200&longitude=13.4049&current_weather=true&timezone=Europe%2FBerlin"
+            configureBackground()
+            titleForButton = "Berlin, DE"
+            defaults.set(urlString, forKey: "city")
+            getWeather(urlString: urlString)
+        } else if contents == "Moscow, RU" {
+            let urlString = "https://api.open-meteo.com/v1/forecast?latitude=55.7512&longitude=37.6184&current_weather=true&timezone=Europe%2FMoscow"
+            configureBackground()
+            titleForButton = "Moscow, RU"
+            defaults.set(urlString, forKey: "city")
+            getWeather(urlString: urlString)
+        }
+
     }
     
     //MARK: - Private methods
@@ -54,13 +86,26 @@ class WeatherView: UIViewController {
         }
     }
     
+    private func checkCity(){
+        let cityLink = defaults.string(forKey: "city")
+        if cityLink == "https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true&timezone=Europe%2FLondon"{
+            titleForButton = "London, UK"
+            urlString = cityLink ?? "https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true&timezone=Europe%2FLondon"
+        } else if cityLink == "https://api.open-meteo.com/v1/forecast?latitude=52.5200&longitude=13.4049&current_weather=true&timezone=Europe%2FBerlin"{
+            titleForButton = "Berlin, DE"
+            urlString = cityLink ?? "https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true&timezone=Europe%2FLondon"
+        } else if cityLink == "https://api.open-meteo.com/v1/forecast?latitude=55.7512&longitude=37.6184&current_weather=true&timezone=Europe%2FMoscow"{
+            titleForButton = "Moscow, RU"
+            urlString = cityLink ?? "https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true&timezone=Europe%2FLondon"
+        }
+    }
+    
     private func configureBackground() {
         backgroundGradient = CAGradientLayer.gradientLayer(in: view.bounds)
         view.layer.addSublayer(backgroundGradient)
     }
     
-    private func getWeather() {
-        let urlString = "https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true&timezone=Europe%2FLondon"
+    private func getWeather(urlString: String) {
         let url = URL(string: urlString)!
         let request = URLRequest(url: url)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -97,12 +142,12 @@ class WeatherView: UIViewController {
     }
     
     private func setUpView() {
-        let cityNameLabel = UILabel()
-        cityNameLabel.text = "London, UK"
-        cityNameLabel.textColor = .white
-        cityNameLabel.font = UIFont.systemFont(ofSize: 32, weight: .medium)
-        view.addSubview(cityNameLabel)
-        cityNameLabel.snp.makeConstraints { make in
+        cityNameButton.setTitle(titleForButton, for: .normal)
+        cityNameButton.setTitleColor(.white, for: .normal)
+        cityNameButton.titleLabel?.font = UIFont(name: "Helvetica", size: 36)
+        cityNameButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        view.addSubview(cityNameButton)
+        cityNameButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(70)
             make.centerX.equalToSuperview()
         }
@@ -114,7 +159,7 @@ class WeatherView: UIViewController {
         weatherImageView.snp.makeConstraints { make in
             make.width.equalTo(200)
             make.height.equalTo(200)
-            make.top.equalTo(cityNameLabel).inset(40)
+            make.top.equalTo(cityNameButton).inset(40)
             make.centerX.equalToSuperview()
         }
         
@@ -125,7 +170,7 @@ class WeatherView: UIViewController {
         view.addSubview(temperatureLabel)
         temperatureLabel.snp.makeConstraints { make in
             make.top.equalTo(weatherImageView).inset(235)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(85)
         }
         
         let temperatureImage = UIImage(systemName: thermometerString)?.withRenderingMode(.alwaysOriginal)
@@ -136,7 +181,7 @@ class WeatherView: UIViewController {
             make.width.equalTo(75)
             make.height.equalTo(75)
             make.top.equalTo(weatherImageView).inset(215)
-            make.left.equalTo(temperatureLabel).inset(-75)
+            make.left.equalToSuperview().inset(10)
         }
         
         
@@ -147,7 +192,7 @@ class WeatherView: UIViewController {
         view.addSubview(windSpeedLabel)
         windSpeedLabel.snp.makeConstraints { make in
             make.top.equalTo(temperatureLabel).inset(90)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(85)
         }
         
         let windSpeedImage = UIImage(systemName: "wind")?.withRenderingMode(.alwaysOriginal)
@@ -157,8 +202,8 @@ class WeatherView: UIViewController {
         windSpeedImageView.snp.makeConstraints { make in
             make.width.equalTo(75)
             make.height.equalTo(75)
-            make.top.equalTo(temperatureImageView).inset(90)
-            make.left.equalTo(temperatureLabel).inset(-75)
+            make.top.equalTo(weatherImageView).inset(305)
+            make.left.equalToSuperview().inset(10)
         }
         
         let windDirectionImage = UIImage(systemName: "tornado")?.withRenderingMode(.alwaysOriginal)
@@ -168,8 +213,8 @@ class WeatherView: UIViewController {
         windDirectionImageView.snp.makeConstraints { make in
             make.width.equalTo(75)
             make.height.equalTo(75)
-            make.top.equalTo(windSpeedImageView).inset(90)
-            make.left.equalTo(windSpeedLabel).inset(-75)
+            make.top.equalTo(weatherImageView).inset(395)
+            make.left.equalToSuperview().inset(10)
         }
         
         let windDirectionLabel = UILabel()
@@ -179,7 +224,7 @@ class WeatherView: UIViewController {
         view.addSubview(windDirectionLabel)
         windDirectionLabel.snp.makeConstraints { make in
             make.top.equalTo(windSpeedLabel).inset(90)
-            make.right.equalTo(windDirectionImageView).inset(-278)
+            make.left.equalToSuperview().inset(85)
         }
         
         let timeImage = UIImage(systemName: timeString)?.withRenderingMode(.alwaysOriginal)
@@ -189,8 +234,8 @@ class WeatherView: UIViewController {
         timeImageView.snp.makeConstraints { make in
             make.width.equalTo(70)
             make.height.equalTo(70)
-            make.top.equalTo(windDirectionImageView).inset(90)
-            make.left.equalTo(windDirectionLabel).inset(-75)
+            make.top.equalTo(weatherImageView).inset(485)
+            make.left.equalToSuperview().inset(10)
         }
         
         let timeLabel = UILabel()
@@ -200,7 +245,16 @@ class WeatherView: UIViewController {
         view.addSubview(timeLabel)
         timeLabel.snp.makeConstraints { make in
             make.top.equalTo(windDirectionLabel).inset(90)
-            make.right.equalTo(timeImageView).inset(-245)
+            make.left.equalToSuperview().inset(85)
         }
+    }
+    
+    //MARK: - Objc methods
+    @objc private func buttonTapped(sender: UIButton){
+        dropper.items = ["London, UK", "Berlin, DE", "Moscow, RU"]
+        dropper.theme = Dropper.Themes.white
+        dropper.delegate = self
+        dropper.cornerRadius = 3
+        dropper.showWithAnimation(0.15, options: Dropper.Alignment.center, button: cityNameButton)
     }
 }

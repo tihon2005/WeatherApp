@@ -1,0 +1,16 @@
+PODS:
+  - Dropper (2.7.6)
+
+DEPENDENCIES:
+  - Dropper
+
+SPEC REPOS:
+  trunk:
+    - Dropper
+
+SPEC CHECKSUMS:
+  Dropper: 52a020beb6fef2e4b1d55447f17099e5776954ef
+
+PODFILE CHECKSUM: 402c0954cc6a32624d9e2a83727ee5f728755d14
+
+COCOAPODS: 1.12.1
